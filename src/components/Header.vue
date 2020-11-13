@@ -62,7 +62,7 @@ export default {
     },
     sendFeedback() {
       mailFuns.post({
-        action: 'Feedback from Labs',
+        action: 'Feedback from Agile Simulation Labs',
         email: encodeURIComponent(document.getElementById('email').value),
         comments: encodeURIComponent(document.getElementById('comments').value)
         },

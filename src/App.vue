@@ -1,11 +1,28 @@
 <template>
   <div id="app" class="mb-4">
-    <appHeader />
+    <Header />
     <div class="main">
       <h1>Agile Simulation Labs</h1>
       <div class="container">
         <div class="row">
-          Content
+          <table class="games">
+            <thead>
+              <tr>
+                <th>Game/Sim</th>
+                <th>Status</th>
+                <th>Popularity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(game, index) in games" :key="index">
+                <td class="left">
+                  {{ game.name }}
+                </td>
+                <td>{{ game.status }}</td>
+                <td><i class="far fa-thumbs-up" /> {{ game.votes }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
@@ -20,9 +37,12 @@ import Header from './components/Header.vue'
 export default {
   name: 'App',
   components: {
-    appHeader: Header
+    Header
   },
   computed: {
+    games() {
+      return this.$store.getters.getGames
+    }
   },
   created() {
     const self = this
@@ -40,6 +60,16 @@ export default {
 </script>
 
 <style lang="scss">
+  .games {
+    margin: 0 auto;
 
+    td {
+      padding: 12px;
+
+      &.left {
+        text-align: left;
+      }
+    }
+  }
 
 </style>
