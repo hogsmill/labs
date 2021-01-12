@@ -4,6 +4,18 @@
     <div class="main">
       <h1>Agile Simulation Labs</h1>
       <div class="container">
+        <div v-if="isHost" class="new-game">
+          <span>Name: </span>
+          <input type="text" id="new-game-name">
+          <span>Status: </span>
+          <select id="new-game-status">
+            <option>Suggested</option>
+            <option>On Hold</option>
+          </select>
+          <button class="btn btn-sm btn-secondary smaller-font" @click="addGame()">
+            Add Game
+          </button>
+        </div>
         <div class="row">
           <div v-for="(game, index) in games" :key="index" class="game-holder">
             <div class="game rounded">
@@ -12,7 +24,15 @@
               </h4>
               <h5>Status: {{ game.status }}</h5>
               <p>
-                Votes: <i class="far fa-thumbs-up" /> {{ game.votes }}
+                Votes: <i class="far fa-thumbs-up votes" @click="voteFor(game)" /> {{ game.votes }}
+              </p>
+              <p v-if="isHost">
+                <button class="btn btn-sm btn-secondary smaller-font" @click="downVoteGame(game)">
+                  Vote Down
+                </button>
+                <button class="btn btn-sm btn-secondary smaller-font" @click="deleteGame(game)">
+                  Delete
+                </button>
               </p>
             </div>
           </div>
@@ -35,6 +55,8 @@
 <script>
 import io from 'socket.io-client'
 
+import params from './lib/params.js'
+
 import Header from './components/Header.vue'
 
 export default {
@@ -43,6 +65,9 @@ export default {
     Header
   },
   computed: {
+    isHost() {
+      return this.$store.getters.getHost
+    },
     games() {
       return this.$store.getters.getGames
     }
@@ -56,13 +81,55 @@ export default {
     const connStr = 'http://' + host + ':3013'
     console.log('Connecting to: ' + connStr)
     this.socket = io(connStr)
+
+    this.socket.emit('loadGames')
+
+    if (params.isParam('host')) {
+      this.$store.dispatch('updateHost', true)
+    }
+
+    this.socket.on('loadGames', (data) => {
+      this.$store.dispatch('loadGames', data)
+    })
+
+    this.socket.on('loadGame', (data) => {
+      this.$store.dispatch('loadGame', data)
+    })
+
+    this.socket.on('deleteGame', (data) => {
+      this.$store.dispatch('deleteGame', data)
+    })
   },
   methods: {
+    addGame() {
+      const name = document.getElementById('new-game-name').value
+      const status = document.getElementById('new-game-status').value
+      this.socket.emit('addGame', {name: name, status: status})
+    },
+    deleteGame(game) {
+      this.socket.emit('deleteGame', game)
+    },
+    downVoteGame(game) {
+      this.socket.emit('downVoteGame', game)
+    },
+    voteFor(game) {
+      this.socket.emit('voteFor', game)
+    }
   }
 }
 </script>
 
 <style lang="scss">
+  .new-game {
+    margin: 12px;
+    padding: 12px;
+    border: 1px solid;
+
+    span, button {
+      margin-left: 16px;
+    }
+  }
+
   .row {
     display: flex;
 
@@ -88,6 +155,13 @@ export default {
           color: #2c3e50;
           border: 8px solid #f4511e;
         }
+      }
+    }
+
+    .votes {
+      &:hover {
+        cursor: pointer;
+        font-weight: bold;
       }
     }
 

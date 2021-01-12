@@ -1,7 +1,11 @@
 const fs = require('fs')
 const ON_DEATH = require('death')({uncaughtException: true})
-const logFile = process.argv[4]
+const os = require('os')
+const prod = os.hostname() == 'agilesimulations' ? true : false
+const logFile = prod ? process.argv[4] : 'server.log'
 
+let currentAction = ''
+let currentData = ''
 ON_DEATH(function(signal, err) {
   let logStr = new Date()
   if (signal) {
@@ -25,13 +29,11 @@ ON_DEATH(function(signal, err) {
 const app = require('express')()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
-const os = require('os')
 
 const dbStore = require('./store/dbStore.js')
 
 const MongoClient = require('mongodb').MongoClient
 
-const prod = os.hostname() == 'agilesimulations' ? true : false
 const url = prod ?  'mongodb://127.0.0.1:27017/' : 'mongodb://localhost:27017/'
 
 const connectDebugOff = prod
@@ -47,8 +49,6 @@ function emit(event, data) {
   io.emit(event, data)
 }
 
-let currentAction = ''
-let currentData = ''
 function doDb(fun, data) {
   currentAction = fun
   currentData = data
@@ -57,29 +57,20 @@ function doDb(fun, data) {
     const db = client.db('db')
 
     switch(fun) {
-      case 'loadGame':
-        dbStore.loadGame(err, client, db, io, data, debugOn)
+      case 'loadGames':
+        dbStore.loadGames(err, client, db, io, debugOn)
         break
-      case 'restartGame':
-        dbStore.restartGame(err, client, db, io, data, debugOn)
+      case 'addGame':
+        dbStore.addGame(err, client, db, io, data, debugOn)
         break
-      case 'addPlayer':
-        dbStore.addPlayer(err, client, db, io, data, debugOn)
+      case 'deleteGame':
+        dbStore.deleteGame(err, client, db, io, data, debugOn)
         break
-      case 'removePlayer':
-        dbStore.removePlayer(err, client, db, io, data, debugOn)
+      case 'downVoteGame':
+        dbStore.downVoteGame(err, client, db, io, data, debugOn)
         break
-      case 'setAgile':
-        dbStore.setAgile(err, client, db, io, data, debugOn)
-        break
-      case 'changeName':
-        dbStore.changeName(err, client, db, io, data, debugOn)
-        break
-      case 'placeBoat':
-        dbStore.placeBoat(err, client, db, io, data, debugOn)
-        break
-      case 'makeMove':
-        dbStore.makeMove(err, client, db, io, data, debugOn)
+      case 'voteFor':
+        dbStore.voteFor(err, client, db, io, data, debugOn)
         break
     }
   })
@@ -100,21 +91,15 @@ io.on('connection', (socket) => {
     emit('updateConnections', {connections: connections, maxConnections: maxConnections})
   })
 
-  socket.on('loadGame', (data) => { doDb('loadGame', data) })
+  socket.on('loadGames', () => { doDb('loadGames') })
 
-  socket.on('restartGame', (data) => { doDb('restartGame', data) })
+  socket.on('addGame', (data) => { doDb('addGame', data) })
 
-  socket.on('changeName', (data) => { doDb('changeName', data) })
+  socket.on('deleteGame', (data) => { doDb('deleteGame', data) })
 
-  socket.on('addPlayer', (data) => { doDb('addPlayer', data) })
+  socket.on('downVoteGame', (data) => { doDb('downVoteGame', data) })
 
-  socket.on('removePlayer', (data) => { doDb('removePlayer', data) })
-
-  socket.on('setAgile', (data) => { doDb('setAgile', data) })
-
-  socket.on('placeBoat', (data) => { doDb('placeBoat', data) })
-
-  socket.on('makeMove', (data) => { doDb('makeMove', data) })
+  socket.on('voteFor', (data) => { doDb('voteFor', data) })
 
 })
 
