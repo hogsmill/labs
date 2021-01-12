@@ -225,6 +225,7 @@ export default {
       &.on-hold {
         div {
           background-color: #bbb;
+          opacity: 0.4;
         }
       }
     }
