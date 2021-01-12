@@ -5,24 +5,27 @@
       <h1>Agile Simulation Labs</h1>
       <div class="container">
         <div class="row">
-          <table class="games">
-            <thead>
-              <tr>
-                <th>Game/Sim</th>
-                <th>Status</th>
-                <th>Popularity</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(game, index) in games" :key="index">
-                <td class="left">
-                  {{ game.name }}
-                </td>
-                <td>{{ game.status }}</td>
-                <td><i class="far fa-thumbs-up" /> {{ game.votes }}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div v-for="(game, index) in games" :key="index" class="game-holder">
+            <div class="game rounded">
+              <h4 class="rounded">
+                {{ game.name }}
+              </h4>
+              <h5>Status: {{ game.status }}</h5>
+              <p>
+                Votes: <i class="far fa-thumbs-up" /> {{ game.votes }}
+              </p>
+            </div>
+          </div>
+          <div class="game-holder">
+            <div class="game suggest rounded">
+              <h4 class="rounded">
+                Your Game
+              </h4>
+              <p>
+                Suggest a game at <a href="/suggest.html">Suggest A Game</a> and see it voted for here
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -60,16 +63,33 @@ export default {
 </script>
 
 <style lang="scss">
-  .games {
-    margin: 0 auto;
+  .row {
+    display: flex;
 
-    td {
+    .game-holder {
+      color: #fff;
+      width: 25%;
       padding: 12px;
+      display: flex;
 
-      &.left {
-        text-align: left;
+      .game {
+        box-shadow: 5px 5px 5px #ccc;
+        background-color: #f4511e;
+        padding: 12px;
+        width: 100%;
+
+        h4 {
+          background-color: #fff;
+          color: #2c3e50;
+        }
+
+        &.suggest {
+          background-color: #fff;
+          color: #2c3e50;
+          border: 8px solid #f4511e;
+        }
       }
     }
-  }
 
+  }
 </style>
