@@ -10,15 +10,7 @@ export const store = new Vuex.Store({
       /*
       { name: 'Niko Niko', status: 'Suggested', votes: 1 },
       { name: 'Dependencies', status: 'Suggested', votes: 1 },
-      { name: 'Lego Flow', status: 'On Hold', votes: 0 },
-      { name: 'Game A', status: 'On Hold', votes: 4 },
-      { name: 'Game B', status: 'On Hold', votes: 7 },
-      { name: 'Game C', status: 'On Hold', votes: 2 },
-      { name: 'Game D', status: 'On Hold', votes: 10 },
-      { name: 'Game E', status: 'On Hold', votes: 9 },
-      { name: 'Game F', status: 'On Hold', votes: 8 },
-      { name: 'Game G', status: 'On Hold', votes: 5 },
-      { name: 'Game H', status: 'On Hold', votes: 7 }
+      { name: 'Lego Flow', status: 'On Hold', votes: 0 }
       */
     ]
   },

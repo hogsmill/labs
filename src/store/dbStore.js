@@ -40,6 +40,24 @@ module.exports = {
     })
   },
 
+  updateGame: function(err, client, db, io, data, debugOn) {
+
+    if (debugOn) { console.log('updateGame', data) }
+
+    db.collection('labs').findOne({name: data.name}, function(err, res) {
+      if (err) throw err
+      if (res) {
+        res.votes = res.votes - 1
+        const id = res._id
+        delete data._id
+        db.collection('labs').updateOne({'_id': id}, {$set: data}, function(err, rec) {
+          if (err) throw err
+          io.emit('loadGame', data)
+        })
+      }
+    })
+  },
+
   deleteGame: function(err, client, db, io, data, debugOn) {
 
     if (debugOn) { console.log('deleteGame', data) }

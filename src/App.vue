@@ -22,7 +22,19 @@
               <h4 class="rounded">
                 {{ game.name }}
               </h4>
-              <h5>Status: {{ game.status }}</h5>
+              <h5>
+                Status:
+                <span v-if="!isHost">{{ game.status }}</span>
+                <div v-if="isHost">
+                  <select :id="'game-status-' + game._id" :value="game.status">
+                    <option>Suggested</option>
+                    <option>On Hold</option>
+                  </select>
+                  <button class="btn btn-sm btn-secondary smaller-font" @click="changeGameStatus(game)">
+                    Update
+                  </button>
+                </div>
+              </h5>
               <p>
                 Votes: <i class="far fa-thumbs-up votes" @click="voteFor(game)" /> {{ game.votes }}
               </p>
@@ -105,6 +117,10 @@ export default {
       const name = document.getElementById('new-game-name').value
       const status = document.getElementById('new-game-status').value
       this.socket.emit('addGame', {name: name, status: status})
+    },
+    changeGameStatus(game) {
+      game.status = document.getElementById('game-status-' + game._id).value
+      this.socket.emit('updateGame', game)
     },
     deleteGame(game) {
       this.socket.emit('deleteGame', game)
