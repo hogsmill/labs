@@ -28,7 +28,9 @@
             <h4>
               {{ game.name }}
             </h4>
-            <h5>Status: {{ game.status }}</h5>
+            <h5 class="details-status">
+              Status: {{ game.status }}
+            </h5>
             <div class="details-image" :class="game.name.replace(/ /g, '-').toLowerCase()" />
             <p v-if="!isHost">
               {{ game.details }}
@@ -255,6 +257,12 @@ export default {
 
     p {
       text-align: left;
+    }
+
+    .details-status {
+      color: #fff;
+      background-color: #2c3e50;
+      padding: 6px;
     }
 
     .details-image {
