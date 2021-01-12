@@ -19,7 +19,7 @@
           </button>
         </div>
         <div v-for="(game, index) in games" :key="index" class="row ">
-          <div v-if="selectedGame == game.name" class="game-details rounded">
+          <div v-if="selectedGame == game.name" class="game-details rounded" :class="game.status.replace(/ /g, '-').toLowerCase()">
             <div class="float-right mr-2 mt-1">
               <button type="button" class="close" @click="setSelectedGame('')" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -179,6 +179,11 @@ export default {
 </script>
 
 <style lang="scss">
+
+  $orange: #f4511e;
+  $pie-in-the-sky: lightblue;
+  $on-hold: #bbb;
+
   .new-game {
     margin: 12px;
     padding: 12px;
@@ -200,7 +205,7 @@ export default {
 
       .game {
         box-shadow: 5px 5px 5px #ccc;
-        background-color: #f4511e;
+        background-color: $orange;
         padding: 12px;
         width: 100%;
 
@@ -215,18 +220,14 @@ export default {
           border: 8px solid #f4511e;
         }
       }
-      &.started {
-      }
-      &.suggested {
-      }
       &.pie-in-the-sky {
         div {
-          background-color: lightblue;
+          background-color: $pie-in-the-sky;
         }
       }
       &.on-hold {
         div {
-          background-color: #bbb;
+          background-color: $on-hold;
           opacity: 0.4;
         }
       }
@@ -251,10 +252,16 @@ export default {
   .game-details {
     background-color: #fff;
     color: #2c3e50;
-    border: 8px solid #f4511e;
+    border: 8px solid $orange;
     margin: 24px auto;
     width: 50%;
 
+    &.pie-in-the-sky {
+      border-color: $pie-in-the-sky;
+    }
+    &.on-hold {
+      border-color: $on-hold;
+    }
     p {
       text-align: left;
     }
