@@ -34,7 +34,7 @@
               {{ game.details }}
             </p>
             <textarea v-if="isHost" :value="game.details" :id="'game-details-' + game._id" />
-            <button class="btn btn-sm btn-secondary smaller-font" @click="updateGameDetails(game)">
+            <button v-if="isHost" class="btn btn-sm btn-secondary smaller-font" @click="updateGameDetails(game)">
               Update
             </button>
           </div>
