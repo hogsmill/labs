@@ -9,25 +9,51 @@
           <input type="text" id="new-game-name">
           <span>Status: </span>
           <select id="new-game-status">
+            <option>Pie In The Sky</option>
             <option>Suggested</option>
+            <option>Started</option>
             <option>On Hold</option>
           </select>
           <button class="btn btn-sm btn-secondary smaller-font" @click="addGame()">
             Add Game
           </button>
         </div>
-        <div class="row">
-          <div v-for="(game, index) in games" :key="index" class="game-holder">
+        <div v-for="(game, index) in games" :key="index" class="row ">
+          <div v-if="selectedGame == game.name" class="game-details rounded">
+            <div class="float-right mr-2 mt-1">
+              <button type="button" class="close" @click="setSelectedGame('')" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <h4>
+              {{ game.name }}
+            </h4>
+            <h5>Status: {{ game.status }}</h5>
+            <div class="details-image" :class="game.name.replace(/ /g, '-').toLowerCase()" />
+            <p v-if="!isHost">
+              {{ game.details }}
+            </p>
+            <textarea v-if="isHost" :value="game.details" :id="'game-details-' + game._id" />
+            <button class="btn btn-sm btn-secondary smaller-font" @click="updateGameDetails(game)">
+              Update
+            </button>
+          </div>
+        </div>
+        <div v-if="!selectedGame" class="row">
+          <div v-for="(game, index) in games" :key="index" class="game-holder" :class="game.status.replace(/ /g, '-').toLowerCase()">
             <div class="game rounded">
               <h4 class="rounded">
                 {{ game.name }}
+                <i class="fas fa-info-circle info" title="What is this?" @click="setSelectedGame(game.name)" />
               </h4>
               <h5>
                 Status:
                 <span v-if="!isHost">{{ game.status }}</span>
                 <div v-if="isHost">
                   <select :id="'game-status-' + game._id" :value="game.status">
+                    <option>Pie In The Sky</option>
                     <option>Suggested</option>
+                    <option>Started</option>
                     <option>On Hold</option>
                   </select>
                   <button class="btn btn-sm btn-secondary smaller-font" @click="changeGameStatus(game)">
@@ -76,6 +102,11 @@ export default {
   components: {
     Header
   },
+  data() {
+    return {
+      selectedGame: ''
+    }
+  },
   computed: {
     isHost() {
       return this.$store.getters.getHost
@@ -113,6 +144,9 @@ export default {
     })
   },
   methods: {
+    image(game) {
+      return '\'url("./assets/img/games/' + game.name + '.jpg")\''
+    },
     addGame() {
       const name = document.getElementById('new-game-name').value
       const status = document.getElementById('new-game-status').value
@@ -120,6 +154,10 @@ export default {
     },
     changeGameStatus(game) {
       game.status = document.getElementById('game-status-' + game._id).value
+      this.socket.emit('updateGame', game)
+    },
+    updateGameDetails(game) {
+      game.details = document.getElementById('game-details-' + game._id).value
       this.socket.emit('updateGame', game)
     },
     deleteGame(game) {
@@ -130,6 +168,9 @@ export default {
     },
     voteFor(game) {
       this.socket.emit('voteFor', game)
+    },
+    setSelectedGame(game) {
+      this.selectedGame = game
     }
   }
 }
@@ -172,6 +213,20 @@ export default {
           border: 8px solid #f4511e;
         }
       }
+      &.started {
+      }
+      &.suggested {
+      }
+      &.pie-in-the-sky {
+        div {
+          background-color: lightblue;
+        }
+      }
+      &.on-hold {
+        div {
+          background-color: #bbb;
+        }
+      }
     }
 
     .votes {
@@ -181,5 +236,52 @@ export default {
       }
     }
 
+    .info {
+      color: #aaa;
+      &:hover {
+        cursor: pointer;
+        color: #444;
+      }
+    }
   }
+
+  .game-details {
+    background-color: #fff;
+    color: #2c3e50;
+    border: 8px solid #f4511e;
+    margin: 24px auto;
+    width: 50%;
+
+    p {
+      text-align: left;
+    }
+
+    .details-image {
+      margin: 0 12px 12px 6px;
+      float: left;
+      width: 50%;
+      height: 150px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position-x: center;
+      background-position-y: center;
+
+      &.niko-niko {
+        background-image: url("./assets/img/games/Niko Niko.jpg");
+      }
+      &.dependencies {
+        background-image: url("./assets/img/games/Dependencies.jpg");
+      }
+      &.lego-flow {
+        background-image: url("./assets/img/games/Lego Flow.jpg");
+      }
+      &.communication {
+        background-image: url("./assets/img/games/Communication.jpg");
+      }
+      &.risk-retro {
+        background-image: url("./assets/img/games/Risk Retro.jpg");
+      }
+    }
+  }
+
 </style>

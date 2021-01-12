@@ -18,6 +18,9 @@ export const store = new Vuex.Store({
     getHost: (state) => {
       return state.host
     },
+    getSelectedGame: (state) => {
+      return state.selectedGame
+    },
     getGames: (state) => {
       return state.games.sort(function(a, b) {
         return b.votes - a.votes
@@ -27,6 +30,9 @@ export const store = new Vuex.Store({
   mutations: {
     updateHost: (state, payload) => {
       state.host = payload
+    },
+    setSelectedGame: (state, payload) => {
+      state.selectedGame = payload
     },
     loadGames: (state, payload) => {
       state.games = payload
@@ -63,6 +69,9 @@ export const store = new Vuex.Store({
     },
     deleteGame: ({ commit }, payload) => {
       commit('deleteGame', payload)
+    },
+    setSelectedGame: ({ commit }, payload) => {
+      commit('setSelectedGame', payload)
     }
   }
 })
