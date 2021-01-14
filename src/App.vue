@@ -297,6 +297,9 @@ export default {
       &.risk-retro {
         background-image: url("./assets/img/games/Risk Retro.jpg");
       }
+      &.health-check {
+        background-image: url("./assets/img/games/Health Check.jpg");
+      }
     }
   }
 
