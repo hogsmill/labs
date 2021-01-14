@@ -264,6 +264,7 @@ export default {
     }
     p {
       text-align: left;
+      padding: 6px;
     }
 
     .details-status {
