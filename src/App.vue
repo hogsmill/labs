@@ -341,6 +341,9 @@ export default {
       &.health-check {
         background-image: url("./assets/img/games/Health Check.jpg");
       }
+      &.alhambra {
+        background-image: url("./assets/img/games/Alhambra.jpg");
+      }
     }
   }
 
