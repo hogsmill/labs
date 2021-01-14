@@ -35,10 +35,38 @@
             <p v-if="!isHost">
               {{ game.details }}
             </p>
+            <p v-if="!isHost && game.link">
+              Link: <a :href="game.link.url">{{ game.link.text }}</a>
+            </p>
             <textarea v-if="isHost" :value="game.details" :id="'game-details-' + game._id" />
             <button v-if="isHost" class="btn btn-sm btn-secondary smaller-font" @click="updateGameDetails(game)">
               Update
             </button>
+            <table v-if="isHost" class="link-table">
+              <tr>
+                <td>
+                  Link:
+                </td>
+                <td>
+                  <input type="text" :id="'game-link-url-' + game._id" :value="game.link && game.link.url">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Text:
+                </td>
+                <td>
+                  <input type="text" :id="'game-link-text-' + game._id" :value="game.link && game.link.text">
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <button class="btn btn-sm btn-secondary smaller-font" @click="updateGameLink(game)">
+                    Update Link
+                  </button>
+                </td>
+              </tr>
+            </table>
           </div>
         </div>
         <div v-if="!selectedGame" class="row">
@@ -162,6 +190,14 @@ export default {
       game.details = document.getElementById('game-details-' + game._id).value
       this.socket.emit('updateGame', game)
     },
+    updateGameLink(game) {
+      if (!game.link) {
+        game.link = {}
+      }
+      game.link.url = document.getElementById('game-link-url-' + game._id).value
+      game.link.text = document.getElementById('game-link-text-' + game._id).value
+      this.socket.emit('updateGame', game)
+    },
     deleteGame(game) {
       this.socket.emit('deleteGame', game)
     },
@@ -255,6 +291,10 @@ export default {
     border: 8px solid $orange;
     margin: 24px auto;
     width: 50%;
+
+    .link-table {
+      margin: 0 6px 0 auto;
+    }
 
     &.pie-in-the-sky {
       border-color: $pie-in-the-sky;
