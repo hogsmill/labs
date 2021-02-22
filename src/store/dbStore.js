@@ -13,7 +13,7 @@ function newGame(game) {
 
 module.exports = {
 
-  loadGames: function(err, client, db, io, debugOn) {
+  loadGames: function(db, io, debugOn) {
 
     if (debugOn) { console.log('loadGames') }
 
@@ -25,7 +25,7 @@ module.exports = {
     })
   },
 
-  addGame: function(err, client, db, io, data, debugOn) {
+  addGame: function(db, io, data, debugOn) {
 
     if (debugOn) { console.log('addGame', data) }
 
@@ -40,7 +40,7 @@ module.exports = {
     })
   },
 
-  updateGame: function(err, client, db, io, data, debugOn) {
+  updateGame: function(db, io, data, debugOn) {
 
     if (debugOn) { console.log('updateGame', data) }
 
@@ -58,7 +58,7 @@ module.exports = {
     })
   },
 
-  deleteGame: function(err, client, db, io, data, debugOn) {
+  deleteGame: function(db, io, data, debugOn) {
 
     if (debugOn) { console.log('deleteGame', data) }
 
@@ -68,7 +68,7 @@ module.exports = {
     })
   },
 
-  downVoteGame: function(err, client, db, io, data, debugOn) {
+  downVoteGame: function(db, io, data, debugOn) {
 
     if (debugOn) { console.log('downVoteGame', data) }
 
@@ -86,7 +86,7 @@ module.exports = {
     })
   },
 
-  voteFor: function(err, client, db, io, data, debugOn) {
+  voteFor: function(db, io, data, debugOn) {
 
     if (debugOn) { console.log('voteFor', data) }
 

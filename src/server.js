@@ -73,63 +73,38 @@ function emit(event, data) {
   io.emit(event, data)
 }
 
-function doDb(fun, data) {
-  currentAction = fun
-  currentData = data
-  MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
-    if (err) throw err
-    const db = client.db('db')
+MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+  if (err) throw err
+  const db = client.db('db')
 
-    switch(fun) {
-      case 'loadGames':
-        dbStore.loadGames(err, client, db, io, debugOn)
-        break
-      case 'addGame':
-        dbStore.addGame(err, client, db, io, data, debugOn)
-        break
-      case 'updateGame':
-        dbStore.updateGame(err, client, db, io, data, debugOn)
-        break
-      case 'deleteGame':
-        dbStore.deleteGame(err, client, db, io, data, debugOn)
-        break
-      case 'downVoteGame':
-        dbStore.downVoteGame(err, client, db, io, data, debugOn)
-        break
-      case 'voteFor':
-        dbStore.voteFor(err, client, db, io, data, debugOn)
-        break
+  io.on('connection', (socket) => {
+    connections = connections + 1
+    if (connections > maxConnections) {
+      console.log(`Too many connections. Socket ${socket.id} closed`)
+      socket.disconnect(0)
+    } else {
+      connectDebugOff || console.log(`A user connected with socket id ${socket.id}. (${connections} connections)`)
+      emit('updateConnections', {connections: connections, maxConnections: maxConnections})
     }
+
+    socket.on('disconnect', () => {
+      connections = connections - 1
+      connectDebugOff || console.log(`User with socket id ${socket.id} has disconnected. (${connections} connections)`)
+      emit('updateConnections', {connections: connections, maxConnections: maxConnections})
+    })
+
+    socket.on('loadGames', () => { dbStore.loadGames(db, io, debugOn) })
+
+    socket.on('addGame', (data) => { dbStore.addGame(db, io, data, debugOn) })
+
+    socket.on('updateGame', (data) => { dbStore.updateGame(db, io, data, debugOn) })
+
+    socket.on('deleteGame', (data) => { dbStore.deleteGame(db, io, data, debugOn) })
+
+    socket.on('downVoteGame', (data) => { dbStore.downVoteGame(db, io, data, debugOn) })
+
+    socket.on('voteFor', (data) => { dbStore.voteFor(db, io, data, debugOn) })
   })
-}
-io.on('connection', (socket) => {
-  connections = connections + 1
-  if (connections > maxConnections) {
-    console.log(`Too many connections. Socket ${socket.id} closed`)
-    socket.disconnect(0)
-  } else {
-    connectDebugOff || console.log(`A user connected with socket id ${socket.id}. (${connections} connections)`)
-    emit('updateConnections', {connections: connections, maxConnections: maxConnections})
-  }
-
-  socket.on('disconnect', () => {
-    connections = connections - 1
-    connectDebugOff || console.log(`User with socket id ${socket.id} has disconnected. (${connections} connections)`)
-    emit('updateConnections', {connections: connections, maxConnections: maxConnections})
-  })
-
-  socket.on('loadGames', () => { doDb('loadGames') })
-
-  socket.on('addGame', (data) => { doDb('addGame', data) })
-
-  socket.on('updateGame', (data) => { doDb('updateGame', data) })
-
-  socket.on('deleteGame', (data) => { doDb('deleteGame', data) })
-
-  socket.on('downVoteGame', (data) => { doDb('downVoteGame', data) })
-
-  socket.on('voteFor', (data) => { doDb('voteFor', data) })
-
 })
 
 const port = process.argv[2] || 3013
