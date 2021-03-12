@@ -16,6 +16,7 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <h1>Agile Simulation Labs</h1>
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
           <a class="nav-link pointer" @click="show()">Feedback</a>
@@ -75,6 +76,11 @@ export default {
 </script>
 
 <style>
+  h1 {
+    letter-spacing: initial;
+    margin-left: 6px;
+    font-weight: bold;
+  }
   .feedback {
     letter-spacing: 0;
     color: #212529;

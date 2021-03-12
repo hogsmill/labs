@@ -2,7 +2,6 @@
   <div id="app" class="mb-4">
     <Header />
     <div class="main">
-      <h1>Agile Simulation Labs</h1>
       <div class="container">
         <div v-if="isHost" class="new-game">
           <span>Name: </span>
@@ -121,7 +120,7 @@
 </template>
 
 <script>
-import io from 'socket.io-client'
+import bus from './socket.js'
 
 import params from './lib/params.js'
 
@@ -146,30 +145,21 @@ export default {
     }
   },
   created() {
-    let connStr
-    if (location.hostname == 'localhost') {
-      connStr = 'http://localhost:3013'
-    } else {
-      connStr = 'https://agilesimulations.co.uk:3013'
-    }
-    console.log('Connecting to: ' + connStr)
-    this.socket = io(connStr)
-
-    this.socket.emit('loadGames')
+    bus.$emit('sendLoadGames')
 
     if (params.isParam('host')) {
       this.$store.dispatch('updateHost', true)
     }
 
-    this.socket.on('loadGames', (data) => {
+    bus.$on('loadGames', (data) => {
       this.$store.dispatch('loadGames', data)
     })
 
-    this.socket.on('loadGame', (data) => {
+    bus.$on('loadGame', (data) => {
       this.$store.dispatch('loadGame', data)
     })
 
-    this.socket.on('deleteGame', (data) => {
+    bus.$on('deleteGame', (data) => {
       this.$store.dispatch('deleteGame', data)
     })
   },
@@ -180,15 +170,15 @@ export default {
     addGame() {
       const name = document.getElementById('new-game-name').value
       const status = document.getElementById('new-game-status').value
-      this.socket.emit('addGame', {name: name, status: status})
+      bus.$emit('sendAddGame', {name: name, status: status})
     },
     changeGameStatus(game) {
       game.status = document.getElementById('game-status-' + game._id).value
-      this.socket.emit('updateGame', game)
+      bus.$emit('sendUpdateGame', game)
     },
     updateGameDetails(game) {
       game.details = document.getElementById('game-details-' + game._id).value
-      this.socket.emit('updateGame', game)
+      bus.$emit('sendUpdateGame', game)
     },
     updateGameLink(game) {
       if (!game.link) {
@@ -196,16 +186,16 @@ export default {
       }
       game.link.url = document.getElementById('game-link-url-' + game._id).value
       game.link.text = document.getElementById('game-link-text-' + game._id).value
-      this.socket.emit('updateGame', game)
+      bus.$emit('sendUpdateGame', game)
     },
     deleteGame(game) {
-      this.socket.emit('deleteGame', game)
+      bus.$emit('sendDeleteGame', game)
     },
     downVoteGame(game) {
-      this.socket.emit('downVoteGame', game)
+      bus.$emit('sendDownVoteGame', game)
     },
     voteFor(game) {
-      this.socket.emit('voteFor', game)
+      bus.$emit('sendVoteFor', game)
     },
     setSelectedGame(game) {
       this.selectedGame = game
