@@ -80,6 +80,7 @@ export default {
     letter-spacing: initial;
     margin-left: 6px;
     font-weight: bold;
+    text-shadow: 2px 2px 3px #444;
   }
   .feedback {
     letter-spacing: 0;
