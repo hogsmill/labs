@@ -81,7 +81,10 @@ export default {
     margin-left: 6px;
     font-weight: bold;
     text-shadow: 2px 2px 3px #444;
+    font-size: xx-large;
+    line-height: 1;
   }
+
   .feedback {
     letter-spacing: 0;
     color: #212529;
