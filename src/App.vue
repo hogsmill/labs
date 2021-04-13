@@ -8,10 +8,9 @@
           <input type="text" id="new-game-name">
           <span>Status: </span>
           <select id="new-game-status">
-            <option>Pie In The Sky</option>
-            <option>Suggested</option>
-            <option>Started</option>
-            <option>On Hold</option>
+            <option v-for="(status, index) in statuses" :key="index">
+              {{ status }}
+            </option>
           </select>
           <button class="btn btn-sm btn-secondary smaller-font" @click="addGame()">
             Add Game
@@ -80,10 +79,9 @@
                 <span v-if="!isHost">{{ game.status }}</span>
                 <div v-if="isHost">
                   <select :id="'game-status-' + game._id" :value="game.status">
-                    <option>Pie In The Sky</option>
-                    <option>Suggested</option>
-                    <option>Started</option>
-                    <option>On Hold</option>
+                    <option v-for="(status, sindex) in statuses" :key="sindex">
+                      {{ status }}
+                    </option>
                   </select>
                   <button class="btn btn-sm btn-secondary smaller-font" @click="changeGameStatus(game)">
                     Update
@@ -142,6 +140,9 @@ export default {
     },
     games() {
       return this.$store.getters.getGames
+    },
+    statuses() {
+      return this.$store.getters.getStatuses
     }
   },
   created() {
@@ -229,9 +230,12 @@ export default {
       padding: 12px;
       display: flex;
 
+      &.started .game {
+        background-color: dodgerblue;
+      }
       .game {
         box-shadow: 5px 5px 5px #ccc;
-        background-color: $orange;
+        background-color: lightgrey;
         padding: 12px;
         width: 100%;
 

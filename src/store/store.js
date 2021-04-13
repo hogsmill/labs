@@ -3,15 +3,27 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+function getAndSort(games, status) {
+  const arr = []
+  for (let i = 0; i < games.length; i++) {
+    if (games[i].status == status) {
+      arr.push(games[i])
+    }
+  }
+  return arr.sort(function(a, b) {
+    return b.votes - a.votes
+  })
+}
+
 export const store = new Vuex.Store({
   state: {
     host: false,
-    games: [
-      /*
-      { name: 'Niko Niko', status: 'Suggested', votes: 1 },
-      { name: 'Dependencies', status: 'Suggested', votes: 1 },
-      { name: 'Lego Flow', status: 'On Hold', votes: 0 }
-      */
+    games: [],
+    statuses: [
+      'Started',
+      'Suggested',
+      'Pie In The Sky',
+      'On Hold'
     ]
   },
   getters: {
@@ -21,10 +33,18 @@ export const store = new Vuex.Store({
     getSelectedGame: (state) => {
       return state.selectedGame
     },
+    getStatuses: (state) => {
+      return state.statuses
+    },
     getGames: (state) => {
-      return state.games.sort(function(a, b) {
-        return b.votes - a.votes
-      })
+      const arr = []
+      for (let i = 0; i < state.statuses.length; i++) {
+        const statusArr = getAndSort(state.games, state.statuses[i])
+        for (let j = 0; j < statusArr.length; j++) {
+          arr.push(statusArr[j])
+        }
+      }
+      return arr
     }
   },
   mutations: {
