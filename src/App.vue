@@ -280,6 +280,7 @@ export default {
   }
 
   .game-details {
+    box-shadow: 5px 5px 5px #ccc;
     background-color: #fff;
     color: #2c3e50;
     border: 8px solid $orange;
