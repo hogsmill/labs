@@ -211,6 +211,11 @@ export default {
   $pie-in-the-sky: lightblue;
   $on-hold: #bbb;
 
+  body {
+    background-image: url("./assets/img/lab.jpg");
+    background-size: cover;
+  }
+
   .new-game {
     margin: 12px;
     padding: 12px;
@@ -234,7 +239,7 @@ export default {
         background-color: dodgerblue;
       }
       .game {
-        box-shadow: 5px 5px 5px #ccc;
+        box-shadow: 5px 5px 5px #444;
         background-color: lightgrey;
         padding: 12px;
         width: 100%;
@@ -258,7 +263,7 @@ export default {
       &.on-hold {
         div {
           background-color: $on-hold;
-          opacity: 0.4;
+          opacity: 0.7;
         }
       }
     }
@@ -274,13 +279,13 @@ export default {
       color: #aaa;
       &:hover {
         cursor: pointer;
-        color: #444;
+        color: $orange;
       }
     }
   }
 
   .game-details {
-    box-shadow: 5px 5px 5px #ccc;
+    box-shadow: 5px 5px 5px #444;
     background-color: #fff;
     color: #2c3e50;
     border: 8px solid $orange;
