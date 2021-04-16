@@ -345,7 +345,7 @@ export default {
         background-image: url("./assets/img/games/Alhambra.jpg");
       }
       &.the-pipeline-game {
-        background-image: url("./assets/img/games/The Pipeine Game.jpg");
+        background-image: url("./assets/img/games/The Pipeline Game.jpg");
       }
     }
   }
