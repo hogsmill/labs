@@ -347,6 +347,9 @@ export default {
       &.the-pipeline-game {
         background-image: url("./assets/img/games/The Pipeline Game.jpg");
       }
+      &.the-bug-game {
+        background-image: url("./assets/img/games/zero bugs.png");
+      }
     }
   }
 
