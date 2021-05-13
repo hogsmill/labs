@@ -1,5 +1,5 @@
 
-let newGame = (game) => {
+const newGame = (game) => {
   const name = game.name
   const status = game.status ? game.status : 'Suggested'
   const votes = game.votes ? game.votes : 0

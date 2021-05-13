@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-let getAndSort = (games, status) => {
+const getAndSort = (games, status) => {
   const arr = []
   for (let i = 0; i < games.length; i++) {
     if (games[i].status == status) {

@@ -4,8 +4,8 @@ const os = require('os')
 const prod = os.hostname() == 'agilesimulations' ? true : false
 const logFile = prod ? process.argv[4] : 'server.log'
 
-let currentAction = ''
-let currentData = ''
+const currentAction = ''
+const currentData = ''
 ON_DEATH((signal, err) => {
   let logStr = new Date()
   if (signal) {
@@ -66,7 +66,7 @@ const debugOn = !prod
 let connections = 0
 const maxConnections = 2500
 
-let emit = (event, data) => {
+const emit = (event, data) => {
   if (debugOn) {
     console.log(event, data)
   }
