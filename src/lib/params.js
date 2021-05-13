@@ -1,7 +1,7 @@
 
 const Params = {
 
-  isParam: function(param) {
+  isParam: (param) => {
     const search = location.search.replace('?', '').split('&')
     let found = false
     for (let i = 0; i < search.length; i++) {
@@ -12,7 +12,7 @@ const Params = {
     return found
   },
 
-  getParam: function(param) {
+  getParam: (param) => {
     const search = location.search.replace('?', '').split('&')
     let found = ''
     for (let i = 0; i < search.length; i++) {

@@ -6,7 +6,7 @@ const logFile = prod ? process.argv[4] : 'server.log'
 
 let currentAction = ''
 let currentData = ''
-ON_DEATH(function(signal, err) {
+ON_DEATH((signal, err) => {
   let logStr = new Date()
   if (signal) {
     logStr = logStr + ' ' + signal + '\n'
@@ -20,7 +20,7 @@ ON_DEATH(function(signal, err) {
   if (err && err.stack) {
     logStr = logStr + '  Error: ' + err.stack + '\n'
   }
-  fs.appendFile(logFile, logStr, function (err) {
+  fs.appendFile(logFile, logStr, (err) => {
     if (err) console.log(logStr)
     process.exit()
   })
@@ -66,14 +66,14 @@ const debugOn = !prod
 let connections = 0
 const maxConnections = 2500
 
-function emit(event, data) {
+let emit = (event, data) => {
   if (debugOn) {
     console.log(event, data)
   }
   io.emit(event, data)
 }
 
-MongoClient.connect(url, { useUnifiedTopology: true }, function (err, client) {
+MongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
   if (err) throw err
   const db = client.db('db')
 

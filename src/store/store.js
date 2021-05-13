@@ -3,14 +3,14 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-function getAndSort(games, status) {
+let getAndSort = (games, status) => {
   const arr = []
   for (let i = 0; i < games.length; i++) {
     if (games[i].status == status) {
       arr.push(games[i])
     }
   }
-  return arr.sort(function(a, b) {
+  return arr.sort((a, b) => {
     return b.votes - a.votes
   })
 }

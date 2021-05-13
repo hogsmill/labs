@@ -5,7 +5,7 @@ window.$ = $
 
 const Mail = {
 
-  post: function(data, message) {
+  post: (data, message) => {
     let ok = true
     for (const key in data) {
       data[key] = data[key].trim()
@@ -20,7 +20,7 @@ const Mail = {
           type: 'GET',
           url: 'https://agilesimulations.co.uk/mail.php',
           data: data,
-          success: function() {
+          success: () => {
             alert(message)
           }
       })
