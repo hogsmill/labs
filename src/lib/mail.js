@@ -5,7 +5,7 @@ window.$ = $
 
 const Mail = {
 
-  post: (data, message) => {
+  post: function(data, message) {
     let ok = true
     for (const key in data) {
       data[key] = data[key].trim()
