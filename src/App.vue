@@ -16,6 +16,7 @@
             Add Game
           </button>
         </div>
+        <!--
         <div v-for="(game, index) in games" :key="index" class="row ">
           <div v-if="selectedGame == game.name" class="game-details rounded" :class="game.status.replace(/ /g, '-').toLowerCase()">
             <div class="float-right mr-2 mt-1">
@@ -67,12 +68,13 @@
             </table>
           </div>
         </div>
-        <div v-if="!selectedGame" class="row">
+        -->
+        <div class="row">
           <div v-for="(game, index) in games" :key="index" class="game-holder" :class="game.status.replace(/ /g, '-').toLowerCase()">
             <div class="game rounded">
               <h4 class="rounded">
                 {{ game.name }}
-                <i class="fas fa-info-circle info" title="What is this?" @click="setSelectedGame(game.name)" />
+                <i class="fas fa-info-circle info" title="What is this?" @click="setSelectedGame(game)" />
               </h4>
               <h5>
                 Status:
@@ -114,6 +116,29 @@
         </div>
       </div>
     </div>
+
+    <modal name="selected-game" :height="420" :classes="['rounded']">
+      <div v-if="selectedGame.status" class="game-details" :class="selectedGame.status.replace(/ /g, '-').toLowerCase()">
+        <div class="float-right mr-2 mt-1">
+          <button type="button" class="close" @click="hide" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="mt-4">
+          <h4>{{ selectedGame.name }}</h4>
+          <h5 class="details-status">
+            Status: {{ selectedGame.status }}
+          </h5>
+          <div v-if="selectedGame.name" class="details-image" :class="selectedGame.name.replace(/ /g, '-').toLowerCase()" />
+          <p>
+            {{ selectedGame.details }}
+          </p>
+          <p v-if="selectedGame.link">
+            Link: <a :href="selectedGame.link.url">{{ selectedGame.link.text }}</a>
+          </p>
+        </div>
+      </div>
+    </modal>
   </div>
 </template>
 
@@ -131,7 +156,7 @@ export default {
   },
   data() {
     return {
-      selectedGame: ''
+      selectedGame: {}
     }
   },
   computed: {
@@ -200,6 +225,11 @@ export default {
     },
     setSelectedGame(game) {
       this.selectedGame = game
+      this.$modal.show('selected-game')
+    },
+    hide() {
+      this.selectedGame = {}
+      this.$modal.hide('selected-game')
     }
   }
 }
@@ -289,9 +319,8 @@ export default {
     background-color: #fff;
     color: #2c3e50;
     border: 8px solid $orange;
-    margin: 24px auto;
-    width: 50%;
-
+    height: 100%;
+    
     .link-table {
       margin: 0 6px 0 auto;
     }
