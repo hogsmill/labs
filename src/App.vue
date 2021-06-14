@@ -16,59 +16,6 @@
             Add Game
           </button>
         </div>
-        <!--
-        <div v-for="(game, index) in games" :key="index" class="row ">
-          <div v-if="selectedGame == game.name" class="game-details rounded" :class="game.status.replace(/ /g, '-').toLowerCase()">
-            <div class="float-right mr-2 mt-1">
-              <button type="button" class="close" @click="setSelectedGame('')" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <h4>
-              {{ game.name }}
-            </h4>
-            <h5 class="details-status">
-              Status: {{ game.status }}
-            </h5>
-            <div class="details-image" :class="game.name.replace(/ /g, '-').toLowerCase()" />
-            <p v-if="!isHost">
-              {{ game.details }}
-            </p>
-            <p v-if="!isHost && game.link">
-              Link: <a :href="game.link.url">{{ game.link.text }}</a>
-            </p>
-            <textarea v-if="isHost" :value="game.details" :id="'game-details-' + game._id" />
-            <button v-if="isHost" class="btn btn-sm btn-secondary smaller-font" @click="updateGameDetails(game)">
-              Update
-            </button>
-            <table v-if="isHost" class="link-table">
-              <tr>
-                <td>
-                  Link:
-                </td>
-                <td>
-                  <input type="text" :id="'game-link-url-' + game._id" :value="game.link && game.link.url">
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Text:
-                </td>
-                <td>
-                  <input type="text" :id="'game-link-text-' + game._id" :value="game.link && game.link.text">
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  <button class="btn btn-sm btn-secondary smaller-font" @click="updateGameLink(game)">
-                    Update Link
-                  </button>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </div>
-        -->
         <div class="row">
           <div v-for="(game, index) in games" :key="index" class="game-holder" :class="game.status.replace(/ /g, '-').toLowerCase()">
             <div class="game rounded">
