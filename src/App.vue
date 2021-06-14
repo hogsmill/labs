@@ -130,12 +130,51 @@
             Status: {{ selectedGame.status }}
           </h5>
           <div v-if="selectedGame.name" class="details-image" :class="selectedGame.name.replace(/ /g, '-').toLowerCase()" />
-          <p>
+          <p v-if="!isHost">
             {{ selectedGame.details }}
           </p>
-          <p v-if="selectedGame.link">
+          <p v-if="!isHost && selectedGame.link">
             Link: <a :href="selectedGame.link.url">{{ selectedGame.link.text }}</a>
           </p>
+          <div v-if="isHost">
+            <table>
+              <tr>
+                <td colspan="2">
+                  <textarea :value="selectedGame.details" id="game-details-edit" />
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <button class="btn btn-sm btn-secondary smaller-font" @click="updateGameDetails()">
+                    Update
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  URL:
+                </td>
+                <td>
+                  <input type="text" id="game-link-url-edit" :value="selectedGame.link && selectedGame.link.url">
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Text:
+                </td>
+                <td>
+                  <input type="text" id="game-link-text-edit" :value="selectedGame.link && selectedGame.link.text">
+                </td>
+              </tr>
+              <tr>
+                <td colspan="2">
+                  <button class="btn btn-sm btn-secondary smaller-font" @click="updateGameLink()">
+                    Update Link
+                  </button>
+                </td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
     </modal>
@@ -202,17 +241,17 @@ export default {
       game.status = document.getElementById('game-status-' + game._id).value
       bus.$emit('sendUpdateGame', game)
     },
-    updateGameDetails(game) {
-      game.details = document.getElementById('game-details-' + game._id).value
-      bus.$emit('sendUpdateGame', game)
+    updateGameDetails() {
+      this.selectedGame.details = document.getElementById('game-details-edit').value
+      bus.$emit('sendUpdateGame', this.selectedGame)
     },
-    updateGameLink(game) {
-      if (!game.link) {
-        game.link = {}
+    updateGameLink() {
+      if (!this.selectedGame.link) {
+        this.selectedGame.link = {}
       }
-      game.link.url = document.getElementById('game-link-url-' + game._id).value
-      game.link.text = document.getElementById('game-link-text-' + game._id).value
-      bus.$emit('sendUpdateGame', game)
+      this.selectedGame.link.url = document.getElementById('game-link-url-edit').value
+      this.selectedGame.link.text = document.getElementById('game-link-text-edit').value
+      bus.$emit('sendUpdateGame', this.selectedGame)
     },
     deleteGame(game) {
       bus.$emit('sendDeleteGame', game)
@@ -225,6 +264,7 @@ export default {
     },
     setSelectedGame(game) {
       this.selectedGame = game
+      console.log(this.selectedGame)
       this.$modal.show('selected-game')
     },
     hide() {
@@ -320,7 +360,7 @@ export default {
     color: #2c3e50;
     border: 8px solid $orange;
     height: 100%;
-    
+
     .link-table {
       margin: 0 6px 0 auto;
     }
