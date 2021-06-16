@@ -76,7 +76,7 @@
           <h5 class="details-status">
             Status: {{ selectedGame.status }}
           </h5>
-          <div v-if="selectedGame.name" class="details-image" :class="selectedGame.name.replace(/ /g, '-').replace(/!/, '').toLowerCase()" />
+          <div v-if="selectedGame.name" class="details-image" :class="selectedGame.name.replace(/ /g, '-').replace(/!/g, '').toLowerCase()" />
           <p v-if="!isHost">
             {{ selectedGame.details }}
           </p>
