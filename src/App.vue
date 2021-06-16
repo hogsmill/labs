@@ -87,7 +87,7 @@
             <table>
               <tr>
                 <td colspan="2">
-                  <textarea :value="selectedGame.details" id="game-details-edit" />
+                  <textarea :value="selectedGame.details" id="game-details-edit" @click="updateGameDetails()" />
                 </td>
               </tr>
               <tr>
