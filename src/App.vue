@@ -76,7 +76,7 @@
           <h5 class="details-status">
             Status: {{ selectedGame.status }}
           </h5>
-          <div v-if="selectedGame.name" class="details-image" :class="selectedGame.name.replace(/ /g, '-').toLowerCase()" />
+          <div v-if="selectedGame.name" class="details-image" :class="selectedGame.name.replace(/ /g, '-').replace(/!/, '').toLowerCase()" />
           <p v-if="!isHost">
             {{ selectedGame.details }}
           </p>
@@ -365,6 +365,9 @@ export default {
       }
       &.the-bug-game {
         background-image: url("./assets/img/games/zero bugs.png");
+      }
+      &.subtraction {
+        background-image: url("./assets/img/games/subtraction.png");
       }
     }
   }
