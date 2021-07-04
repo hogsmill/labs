@@ -369,6 +369,9 @@ export default {
       &.subtraction {
         background-image: url("./assets/img/games/subtraction.png");
       }
+      &.minesweeper {
+        background-image: url("./assets/img/games/minesweeper.png");
+      }
     }
   }
 
