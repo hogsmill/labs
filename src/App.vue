@@ -372,6 +372,9 @@ export default {
       &.minesweeper {
         background-image: url("./assets/img/games/minesweeper.png");
       }
+      &.values-map {
+        background-image: url("./assets/img/games/values radar.png");
+      }
     }
   }
 
