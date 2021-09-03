@@ -72,6 +72,23 @@ export default {
       return this.$store.getters.getAdmin
     }
   },
+  created() {
+    let session = localStorage.getItem('session-agilesimulations')
+    if (session) {
+      session = JSON.parse(session)
+      bus.$emit('sendCheckLogin', {id: this.id, session: session})
+    } else {
+      this.clearLogin()
+    }
+
+    bus.$on('loginSuccess', (data) => {
+      this.$store.dispatch('updateLogin', data)
+    })
+
+    bus.$on('logout', () => {
+      this.clearLogin()
+    })
+  },
   methods: {
     show () {
       this.$modal.show('feedback')
