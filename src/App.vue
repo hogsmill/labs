@@ -387,7 +387,7 @@ export default {
       &.values-map {
         background-image: url("./assets/img/games/values radar.jpg");
       }
-      &.appraisals {
+      &.the-appraisals-game {
         background-image: url("./assets/img/games/appraisals.jpg");
       }
     }
