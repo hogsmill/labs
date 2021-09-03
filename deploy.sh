@@ -5,10 +5,11 @@ if [ "$1" == "-f" ]; then
 fi
 
 PORT=3013
+DIR="/usr/apps/labs"
 
 ENVFILE="$DIR/.env"
 echo "VUE_APP_PORT=$PORT" > $ENVFILE
-  
+
 PWD=`pwd`
 APP=`basename $PWD`
 git stash
