@@ -3,7 +3,7 @@
     <Header />
     <div class="main">
       <div class="container">
-        <div v-if="isHost" class="new-game">
+        <div v-if="admin" class="new-game">
           <span>Name: </span>
           <input type="text" id="new-game-name">
           <span>Status: </span>
@@ -25,8 +25,8 @@
               </h4>
               <h5>
                 Status:
-                <span v-if="!isHost">{{ game.status }}</span>
-                <div v-if="isHost">
+                <span v-if="!admin">{{ game.status }}</span>
+                <div v-if="admin">
                   <select :id="'game-status-' + game._id" :value="game.status">
                     <option v-for="(status, sindex) in statuses" :key="sindex">
                       {{ status }}
@@ -40,7 +40,7 @@
               <p>
                 Votes: <i class="far fa-thumbs-up votes" @click="voteFor(game)" /> {{ game.votes }}
               </p>
-              <p v-if="isHost">
+              <p v-if="admin">
                 <button class="btn btn-sm btn-secondary smaller-font" @click="downVoteGame(game)">
                   Vote Down
                 </button>
@@ -77,13 +77,13 @@
             Status: {{ selectedGame.status }}
           </h5>
           <div v-if="selectedGame.name" class="details-image" :class="selectedGame.name.replace(/ /g, '-').replace(/!/g, '').toLowerCase()" />
-          <p v-if="!isHost">
+          <p v-if="!admin">
             {{ selectedGame.details }}
           </p>
-          <p v-if="!isHost && selectedGame.link">
+          <p v-if="!admin && selectedGame.link">
             Link: <a :href="selectedGame.link.url">{{ selectedGame.link.text }}</a>
           </p>
-          <div v-if="isHost">
+          <div v-if="admin">
             <table>
               <tr>
                 <td colspan="2">
@@ -146,9 +146,6 @@ export default {
     }
   },
   computed: {
-    isHost() {
-      return this.$store.getters.getHost
-    },
     admin() {
       return this.$store.getters.getAdmin
     },
@@ -175,12 +172,8 @@ export default {
     bus.$on('logout', () => {
       this.clearLogin()
     })
-    
-    bus.$emit('sendLoadGames')
 
-    if (params.isParam('host')) {
-      this.$store.dispatch('updateHost', true)
-    }
+    bus.$emit('sendLoadGames')
 
     bus.$on('loadGames', (data) => {
       this.$store.dispatch('loadGames', data)

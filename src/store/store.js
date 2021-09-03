@@ -17,7 +17,6 @@ const getAndSort = (games, status) => {
 
 export const store = new Vuex.Store({
   state: {
-    host: false,
     session: null,
     userName: '',
     admin: false,
@@ -38,9 +37,6 @@ export const store = new Vuex.Store({
     },
     getAdmin: (state) => {
       return state.admin
-    },
-    getHost: (state) => {
-      return state.host
     },
     getSelectedGame: (state) => {
       return state.selectedGame
@@ -67,9 +63,6 @@ export const store = new Vuex.Store({
     },
     updateAdmin: (state, payload) => {
       state.admin = payload
-    },
-    updateHost: (state, payload) => {
-      state.host = payload
     },
     setSelectedGame: (state, payload) => {
       state.selectedGame = payload
@@ -106,9 +99,6 @@ export const store = new Vuex.Store({
     },
     updateAdmin: ({ commit }, payload) => {
       commit('updateAdmin', payload)
-    },
-    updateHost: ({ commit }, payload) => {
-      commit('updateHost', payload)
     },
     loadGames: ({ commit }, payload) => {
       commit('loadGames', payload)
