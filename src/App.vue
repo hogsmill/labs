@@ -149,6 +149,9 @@ export default {
     isHost() {
       return this.$store.getters.getHost
     },
+    admin() {
+      return this.$store.getters.getAdmin
+    },
     games() {
       return this.$store.getters.getGames
     },
