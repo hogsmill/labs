@@ -18,6 +18,9 @@ const getAndSort = (games, status) => {
 export const store = new Vuex.Store({
   state: {
     host: false,
+    session: null,
+    userName: '',
+    admin: false,
     games: [],
     statuses: [
       'Started',
@@ -27,6 +30,15 @@ export const store = new Vuex.Store({
     ]
   },
   getters: {
+    getSession: (state) => {
+      return state.session
+    },
+    getUserName: (state) => {
+      return state.userName
+    },
+    getAdmin: (state) => {
+      return state.admin
+    },
     getHost: (state) => {
       return state.host
     },
@@ -48,6 +60,14 @@ export const store = new Vuex.Store({
     }
   },
   mutations: {
+    updateLogin: (state, payload) => {
+      state.session = payload.session
+      state.userName = payload.userName
+      state.admin = payload.loggedInAsAdmin
+    },
+    updateAdmin: (state, payload) => {
+      state.admin = payload
+    },
     updateHost: (state, payload) => {
       state.host = payload
     },
@@ -78,6 +98,15 @@ export const store = new Vuex.Store({
     }
   },
   actions: {
+    updateLogin: ({ commit }, payload) => {
+      commit('updateLogin', payload)
+    },
+    updateUserName: ({ commit }, payload) => {
+      commit('updateUserName', payload)
+    },
+    updateAdmin: ({ commit }, payload) => {
+      commit('updateAdmin', payload)
+    },
     updateHost: ({ commit }, payload) => {
       commit('updateHost', payload)
     },
