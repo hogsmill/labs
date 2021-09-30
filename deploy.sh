@@ -31,6 +31,9 @@ if [ -f "src/server.js" ]; then
   fi
 fi
 
+rm -rf node_modules/.cache
+rm -rf dist
+
 ps -ef | grep php | grep outdated
 if [ $? -eq 1 ]; then
   php /usr/apps/monitor/src/lib/outdated.php &
