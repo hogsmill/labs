@@ -29,30 +29,6 @@
           </a>
         </li>
       </ul>
-
-      <modal name="feedback" :height="420" :classes="['rounded', 'feedback']">
-        <div class="float-right mr-2 mt-1">
-          <button type="button" class="close" @click="hide" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="mt-4">
-          <h4>Feedback</h4>
-          <p class="feedback-form">
-            Thanks for visiting Agile Simulation Labs; we'd love to hear any feedback you have
-            so that we can constantly improve things.
-          </p>
-          <div class="feedback-form">
-            <input type="text" id="email" class="form-control" placeholder="Email (optional)">
-            <br>
-            <textarea id="comments" rows="6" class="form-control" placeholder="Your comments" />
-            <br>
-            <button class="btn btn-sm btn-secondary smaller-font" @click="sendFeedback()">
-              Send Feedback
-            </button>
-          </div>
-        </div>
-      </modal>
     </div>
   </nav>
 </template>
@@ -78,37 +54,30 @@ export default {
     let session = localStorage.getItem('session-agilesimulations')
     if (session) {
       session = JSON.parse(session)
-      bus.$emit('sendCheckLogin', {id: this.id, session: session})
+      bus.emit('sendCheckLogin', {id: this.id, session: session})
     } else {
       this.clearLogin()
     }
 
-    bus.$on('loginSuccess', (data) => {
+    bus.on('loginSuccess', (data) => {
       this.$store.dispatch('updateLogin', data)
     })
 
-    bus.$on('logout', () => {
+    bus.on('logout', () => {
       this.clearLogin()
     })
   },
   methods: {
+    clearLogin() {
+      if (this.connectToAgileSimulations) {
+        const data = {session: '', userName: '', loggedInAsAdmin: false}
+        this.$store.dispatch('updateLogin', data)
+      }
+    },
     show () {
-      this.$modal.show('feedback')
-    },
-    hide () {
-      this.$modal.hide('feedback')
-    },
-    sendFeedback() {
-      mailFuns.post({
-        action: 'Feedback from Agile Simulation Labs',
-        email: encodeURIComponent(document.getElementById('email').value),
-        comments: encodeURIComponent(document.getElementById('comments').value)
-        },
-        'Thanks for your feedback - we appreciate it!'
-      )
-      this.hide()
+      this.$store.dispatch('showModal', 'feedback')
     }
-  },
+  }
 }
 </script>
 

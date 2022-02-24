@@ -1,7 +1,4 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-
-Vue.use(Vuex)
+import { createStore } from 'vuex'
 
 const getAndSort = (games, status) => {
   const arr = []
@@ -15,11 +12,15 @@ const getAndSort = (games, status) => {
   })
 }
 
-export const store = new Vuex.Store({
+export const store = createStore({
   state: {
     session: null,
     userName: '',
     admin: false,
+    modals: {
+      'feedback': false,
+      'selectedGame': false
+    },
     games: [],
     statuses: [
       'Started',
@@ -37,6 +38,9 @@ export const store = new Vuex.Store({
     },
     getAdmin: (state) => {
       return state.admin
+    },
+    getModals: (state) => {
+      return state.modals
     },
     getSelectedGame: (state) => {
       return state.selectedGame
@@ -63,6 +67,16 @@ export const store = new Vuex.Store({
     },
     updateAdmin: (state, payload) => {
       state.admin = payload
+    },
+    showModal: (state, payload) => {
+      const modals = Object.keys(state.modals)
+      for (let i = 0; i < modals.length; i++) {
+        state.modals[modals[i]] = false
+      }
+      state.modals[payload] = true
+    },
+    hideModal: (state, payload) => {
+      state.modals[payload] = false
     },
     setSelectedGame: (state, payload) => {
       state.selectedGame = payload
@@ -99,6 +113,12 @@ export const store = new Vuex.Store({
     },
     updateAdmin: ({ commit }, payload) => {
       commit('updateAdmin', payload)
+    },
+    showModal: ({ commit }, payload) => {
+      commit('showModal', payload)
+    },
+    hideModal: ({ commit }, payload) => {
+      commit('hideModal', payload)
     },
     loadGames: ({ commit }, payload) => {
       commit('loadGames', payload)

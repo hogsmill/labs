@@ -25,35 +25,35 @@ if (connectToAgileSimulations) {
 
 if (connectToAgileSimulations) {
 
-  bus.$on('sendCheckLogin', (data) => { asSocket.emit('sendCheckLogin', data) })
+  bus.on('sendCheckLogin', (data) => { asSocket.emit('sendCheckLogin', data) })
 
-  bus.$on('sendRating', (data) => { asSocket.emit('sendRating', data) })
+  bus.on('sendRating', (data) => { asSocket.emit('sendRating', data) })
 
-  asSocket.on('loginSuccess', (data) => { bus.$emit('loginSuccess', data) })
+  asSocket.on('loginSuccess', (data) => { bus.emit('loginSuccess', data) })
 
-  asSocket.on('logout', (data) => { bus.$emit('logout', data) })
+  asSocket.on('logout', (data) => { bus.emit('logout', data) })
 }
 
 // Send
 
-bus.$on('sendLoadGames', () => { socket.emit('sendLoadGames') })
+bus.on('sendLoadGames', () => { socket.emit('sendLoadGames') })
 
-bus.$on('sendUpdateGame', (data) => { socket.emit('sendUpdateGame', data) })
+bus.on('sendUpdateGame', (data) => { socket.emit('sendUpdateGame', data) })
 
-bus.$on('sendAddGame', (data) => { socket.emit('sendAddGame', data) })
+bus.on('sendAddGame', (data) => { socket.emit('sendAddGame', data) })
 
-bus.$on('sendDeleteGame', (data) => { socket.emit('sendDeleteGame', data) })
+bus.on('sendDeleteGame', (data) => { socket.emit('sendDeleteGame', data) })
 
-bus.$on('sendDownVoteGame', (data) => { socket.emit('sendDownVoteGame', data) })
+bus.on('sendDownVoteGame', (data) => { socket.emit('sendDownVoteGame', data) })
 
-bus.$on('sendVoteFor', (data) => { socket.emit('sendVoteFor', data) })
+bus.on('sendVoteFor', (data) => { socket.emit('sendVoteFor', data) })
 
 // Receive
 
-socket.on('loadGames', (data) => { bus.$emit('loadGames', data) })
+socket.on('loadGames', (data) => { bus.emit('loadGames', data) })
 
-socket.on('loadGame', (data) => { bus.$emit('loadGame', data) })
+socket.on('loadGame', (data) => { bus.emit('loadGame', data) })
 
-socket.on('deleteGame', (data) => { bus.$emit('deleteGame', data) })
+socket.on('deleteGame', (data) => { bus.emit('deleteGame', data) })
 
 export default bus

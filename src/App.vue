@@ -63,68 +63,7 @@
         </div>
       </div>
     </div>
-
-    <modal name="selected-game" :height="420" :classes="['rounded']">
-      <div v-if="selectedGame.status" class="game-details" :class="selectedGame.status.replace(/ /g, '-').toLowerCase()">
-        <div class="float-right mr-2 mt-1">
-          <button type="button" class="close" @click="hide" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="mt-4">
-          <h4>{{ selectedGame.name }}</h4>
-          <h5 class="details-status">
-            Status: {{ selectedGame.status }}
-          </h5>
-          <div v-if="selectedGame.name" class="details-image" :class="selectedGame.name.replace(/ /g, '-').replace(/!/g, '').toLowerCase()" />
-          <p v-if="!admin">
-            {{ selectedGame.details }}
-          </p>
-          <p v-if="!admin && selectedGame.link">
-            Link: <a :href="selectedGame.link.url">{{ selectedGame.link.text }}</a>
-          </p>
-          <div v-if="admin">
-            <table>
-              <tr>
-                <td colspan="2">
-                  <textarea :value="selectedGame.details" id="game-details-edit" @click="updateGameDetails()" />
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  <button class="btn btn-sm btn-secondary smaller-font" @click="updateGameDetails()">
-                    Update
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  URL:
-                </td>
-                <td>
-                  <input type="text" id="game-link-url-edit" :value="selectedGame.link && selectedGame.link.url">
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Text:
-                </td>
-                <td>
-                  <input type="text" id="game-link-text-edit" :value="selectedGame.link && selectedGame.link.text">
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2">
-                  <button class="btn btn-sm btn-secondary smaller-font" @click="updateGameLink()">
-                    Update Link
-                  </button>
-                </td>
-              </tr>
-            </table>
-          </div>
-        </div>
-      </div>
-    </modal>
+    <Modals />
   </div>
 </template>
 
@@ -134,11 +73,13 @@ import bus from './socket.js'
 import params from './lib/params.js'
 
 import Header from './components/Header.vue'
+import Modals from './components/Modals.vue'
 
 export default {
   name: 'App',
   components: {
-    Header
+    Header,
+    Modals
   },
   data() {
     return {
@@ -157,35 +98,23 @@ export default {
     }
   },
   created() {
-    let session = localStorage.getItem('session-agilesimulations')
-    if (session) {
-      session = JSON.parse(session)
-      bus.$emit('sendCheckLogin', {id: this.id, session: session})
-    } else {
-      this.clearLogin()
-    }
+    bus.emit('sendLoadGames')
 
-    bus.$on('loginSuccess', (data) => {
-      this.$store.dispatch('updateLogin', data)
-    })
-
-    bus.$on('logout', () => {
-      this.clearLogin()
-    })
-
-    bus.$emit('sendLoadGames')
-
-    bus.$on('loadGames', (data) => {
+    bus.on('loadGames', (data) => {
       this.$store.dispatch('loadGames', data)
     })
 
-    bus.$on('loadGame', (data) => {
+    bus.on('loadGame', (data) => {
       this.$store.dispatch('loadGame', data)
     })
 
-    bus.$on('deleteGame', (data) => {
+    bus.on('deleteGame', (data) => {
       this.$store.dispatch('deleteGame', data)
     })
+
+    if (location.hostname == 'localhost' && params.isParam('host')) {
+      this.$store.dispatch('updateAdmin', true)
+    }
   },
   methods: {
     image(game) {
@@ -194,41 +123,24 @@ export default {
     addGame() {
       const name = document.getElementById('new-game-name').value
       const status = document.getElementById('new-game-status').value
-      bus.$emit('sendAddGame', {name: name, status: status})
+      bus.emit('sendAddGame', {name: name, status: status})
     },
     changeGameStatus(game) {
       game.status = document.getElementById('game-status-' + game._id).value
-      bus.$emit('sendUpdateGame', game)
-    },
-    updateGameDetails() {
-      this.selectedGame.details = document.getElementById('game-details-edit').value
-      bus.$emit('sendUpdateGame', this.selectedGame)
-    },
-    updateGameLink() {
-      if (!this.selectedGame.link) {
-        this.selectedGame.link = {}
-      }
-      this.selectedGame.link.url = document.getElementById('game-link-url-edit').value
-      this.selectedGame.link.text = document.getElementById('game-link-text-edit').value
-      bus.$emit('sendUpdateGame', this.selectedGame)
+      bus.emit('sendUpdateGame', game)
     },
     deleteGame(game) {
-      bus.$emit('sendDeleteGame', game)
+      bus.emit('sendDeleteGame', game)
     },
     downVoteGame(game) {
-      bus.$emit('sendDownVoteGame', game)
+      bus.emit('sendDownVoteGame', game)
     },
     voteFor(game) {
-      bus.$emit('sendVoteFor', game)
+      bus.emit('sendVoteFor', game)
     },
     setSelectedGame(game) {
-      this.selectedGame = game
-      console.log(this.selectedGame)
-      this.$modal.show('selected-game')
-    },
-    hide() {
-      this.selectedGame = {}
-      this.$modal.hide('selected-game')
+      this.$store.dispatch('setSelectedGame', game)
+      this.$store.dispatch('showModal', 'selectedGame')
     }
   }
 }
@@ -314,10 +226,8 @@ export default {
   }
 
   .game-details {
-    box-shadow: 5px 5px 5px #444;
     background-color: #fff;
     color: #2c3e50;
-    border: 8px solid $orange;
     height: 100%;
 
     .link-table {
